@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { ticketsApi } from '../services/api';
 import { CreateTicketRequest, TICKET_CATEGORIES, User } from '../types';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 interface CreateTicketProps {
   onClose: () => void;
@@ -124,15 +126,23 @@ const CreateTicket: React.FC<CreateTicketProps> = ({ onClose, onCreate, currentU
 
           <div className="form-group">
             <label htmlFor="description">Description *</label>
-            <textarea
+            <ReactQuill
               id="description"
               value={formData.description}
-              onChange={(e) => handleInputChange('description', e.target.value)}
-              placeholder="Enter detailed description of the ticket"
-              className="form-textarea"
-              rows={6}
-              required
-              disabled={loading}
+              onChange={(value) => handleInputChange('description', value)}
+              placeholder="Enter detailed description of the ticket (supports images)"
+              theme="snow"
+              modules={{
+                toolbar: [
+                  [{ header: [1, 2, false] }],
+                  ['bold', 'italic', 'underline', 'strike'],
+                  ['blockquote', 'code-block'],
+                  [{ list: 'ordered' }, { list: 'bullet' }],
+                  ['link', 'image'],
+                  ['clean']
+                ]
+              }}
+              readOnly={loading}
             />
           </div>
 

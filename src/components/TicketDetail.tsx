@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { ticketsApi } from '../services/api';
 import { Ticket, TICKET_STATUSES, TICKET_CATEGORIES } from '../types';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 interface TicketDetailProps {
   ticket: Ticket;
@@ -176,16 +178,26 @@ const TicketDetail: React.FC<TicketDetailProps> = ({ ticket, onClose, onUpdate }
           <div className="description-section">
             <label>Description:</label>
             {isEditing ? (
-              <textarea
+              <ReactQuill
                 value={editedTicket.description}
-                onChange={(e) => setEditedTicket(prev => ({ ...prev, description: e.target.value }))}
-                className="edit-textarea"
-                rows={6}
+                onChange={(value: string) => setEditedTicket(prev => ({ ...prev, description: value }))}
+                theme="snow"
+                modules={{
+                  toolbar: [
+                    [{ header: [1, 2, false] }],
+                    ['bold', 'italic', 'underline', 'strike'],
+                    ['blockquote', 'code-block'],
+                    [{ list: 'ordered' }, { list: 'bullet' }],
+                    ['link', 'image'],
+                    ['clean']
+                  ]
+                }}
               />
             ) : (
-              <div className="description-content">
-                {ticket.description}
-              </div>
+              <div
+                className="description-content"
+                dangerouslySetInnerHTML={{ __html: ticket.description }}
+              />
             )}
           </div>
 
